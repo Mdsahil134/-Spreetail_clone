@@ -1,67 +1,150 @@
 # Splitwise Clone
 
-A simplified Splitwise-inspired expense sharing application.
+A simplified Splitwise-inspired expense sharing application. Users can create groups, add shared expenses, split costs equally, track balances, and settle debts.
 
 ## Features
 
-* User Authentication
-* Group Creation
-* Expense Tracking
-* Equal Expense Splitting
-* Balance Summary
-* Debt Settlement
+- User registration and login (JWT authentication)
+- Create groups and add members
+- Add expenses with automatic equal splitting
+- View per-group balances and suggested settlements
+- Dashboard with overall owed/owing summary
+- Record debt settlements
 
 ## Tech Stack
 
-**Backend:** Django, Django REST Framework, JWT auth
+| Layer    | Technologies                          |
+|----------|---------------------------------------|
+| Backend  | Python, Django, Django REST Framework |
+| Frontend | React, TailwindCSS, Vite              |
+| Database | SQLite (local) / PostgreSQL (prod)    |
+| Auth     | JWT (Simple JWT)                      |
+| Deploy   | Render (backend), Vercel (frontend)   |
 
-**Frontend:** React, TailwindCSS, Vite
+## Project Structure
 
-**Database:** PostgreSQL (production) / SQLite (local dev)
+```
+splitwise-clone/
+├── backend/
+│   ├── config/          # Django settings & URLs
+│   ├── users/           # Authentication
+│   ├── groups/          # Group management
+│   ├── expenses/        # Expenses & equal splits
+│   ├── settlements/     # Balances & debt settlement
+│   └── manage.py
+├── frontend/
+│   └── src/
+│       ├── pages/       # Login, Dashboard, Groups, etc.
+│       ├── components/  # Reusable UI components
+│       ├── api/         # API client
+│       └── context/     # Auth state
+├── BUILD_PLAN.md
+└── README.md
+```
 
-## Setup
+## Prerequisites
 
-### Backend
+- Python 3.10+
+- Node.js 18+
+- npm
+
+## Setup & Run
+
+### 1. Backend
 
 ```bash
 cd backend
 python -m venv venv
+```
 
-# Activate venv (pick the one that matches your Python install):
-# MSYS2 / Git Bash on Windows:
+**Activate the virtual environment:**
+
+```bash
+# MSYS2 / Git Bash (Windows)
 source venv/bin/activate
-# Standard Windows Python:
-# venv\Scripts\activate
 
+# Standard Windows Python (PowerShell)
+venv\Scripts\activate
+
+# macOS / Linux
+source venv/bin/activate
+```
+
+**Install dependencies and start the server:**
+
+```bash
 python -m pip install -r requirements.txt
-copy .env.example .env         # Windows
-# cp .env.example .env         # macOS/Linux
+copy .env.example .env          # Windows
+# cp .env.example .env          # macOS/Linux
 python manage.py migrate
 python manage.py runserver
 ```
 
-> **Note:** Use `python -m pip` instead of `pip` if `pip` is not recognized.
-> For PostgreSQL on Render, use `requirements-prod.txt` (includes `psycopg2-binary`).
+Backend runs at **http://127.0.0.1:8000**
 
-By default, `USE_SQLITE=True` uses a local SQLite database. For PostgreSQL locally, set `USE_SQLITE=False` in `.env` and configure `DB_*` variables.
+> If `pip` is not recognized, always use `python -m pip` instead.
+>
+> On MSYS2 Python, the venv uses `venv/bin/` (not `venv\Scripts\`). You can run commands directly:
+> ```powershell
+> .\venv\bin\python.exe -m pip install -r requirements.txt
+> .\venv\bin\python.exe manage.py runserver
+> ```
 
-### Frontend
+### 2. Frontend
+
+Open a **new terminal**:
 
 ```bash
 cd frontend
 npm install
-copy .env.example .env
+copy .env.example .env          # Windows
+# cp .env.example .env          # macOS/Linux
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173).
+Frontend runs at **http://localhost:5173**
+
+## Environment Variables
+
+### Backend (`backend/.env`)
+
+| Variable              | Default                          | Description                    |
+|-----------------------|----------------------------------|--------------------------------|
+| `SECRET_KEY`          | dev key                          | Django secret key              |
+| `DEBUG`               | `True`                           | Debug mode                     |
+| `USE_SQLITE`          | `True`                           | Use SQLite for local dev       |
+| `CORS_ALLOWED_ORIGINS`| `http://localhost:5173`          | Allowed frontend origins       |
+
+Set `USE_SQLITE=False` and configure `DB_*` variables to use PostgreSQL locally.
+
+### Frontend (`frontend/.env`)
+
+| Variable       | Default                      | Description        |
+|----------------|------------------------------|--------------------|
+| `VITE_API_URL` | `http://localhost:8000/api`  | Backend API base   |
+
+## API Endpoints
+
+| Method   | Endpoint                              | Description           |
+|----------|---------------------------------------|-----------------------|
+| `POST`   | `/api/auth/register/`                 | Register user         |
+| `POST`   | `/api/auth/login/`                    | Login (returns JWT)   |
+| `GET`    | `/api/auth/profile/`                  | Current user profile  |
+| `GET`    | `/api/auth/search/?q=`                | Search users          |
+| `GET/POST` | `/api/groups/`                      | List / create groups  |
+| `GET`    | `/api/groups/:id/`                    | Group details         |
+| `POST`   | `/api/groups/:id/members/`            | Add member            |
+| `GET/POST` | `/api/expenses/group/:id/`          | List / create expenses|
+| `GET`    | `/api/settlements/dashboard/`         | Dashboard summary     |
+| `GET`    | `/api/settlements/group/:id/balances/`| Group balances      |
+| `GET/POST` | `/api/settlements/group/:id/`       | List / record settlements |
 
 ## Deployment
 
-**Frontend (Vercel):** Deploy the `frontend/` directory. Set `VITE_API_URL` to your Render backend URL.
+**Backend (Render):** Deploy the `backend/` folder. Uses `requirements-prod.txt` (includes PostgreSQL driver). Configure `CORS_ALLOWED_ORIGINS` with your Vercel URL.
 
-**Backend (Render):** Deploy the `backend/` directory using `render.yaml`. Set `CORS_ALLOWED_ORIGINS` to your Vercel URL.
+**Frontend (Vercel):** Deploy the `frontend/` folder. Set `VITE_API_URL` to your Render backend URL (e.g. `https://your-app.onrender.com/api`).
 
 ## Author
 
-Md Sahil
+**Md Sahil**
