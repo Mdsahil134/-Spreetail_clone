@@ -38,7 +38,9 @@ splitwise-clone/
 │       ├── components/  # Reusable UI components
 │       ├── api/         # API client
 │       └── context/     # Auth state
-├── BUILD_PLAN.md
+├── AI_CONTEXT.md      # Architecture & business rules (source of truth)
+├── BUILD_PLAN.md      # Phased build plan
+├── prompts.md         # AI prompts used during development
 └── README.md
 ```
 

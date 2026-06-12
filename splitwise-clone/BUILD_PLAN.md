@@ -1,5 +1,13 @@
 # BUILD_PLAN.md
 
+## Documentation
+
+| File | Purpose |
+|------|---------|
+| [AI_CONTEXT.md](./AI_CONTEXT.md) | Single source of truth — schema, APIs, business rules |
+| [prompts.md](./prompts.md) | AI prompts used during development |
+| [README.md](./README.md) | Setup, run, and deployment guide |
+
 ## Project Goal
 
 Build a simplified Splitwise clone that allows users to create groups, add expenses, split expenses equally, track balances and settle debts.
